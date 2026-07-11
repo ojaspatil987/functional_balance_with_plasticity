@@ -204,7 +204,7 @@ W_init[S_II.i + ne, S_II.j + ne] = S_II.w / mV
 fig, ax = plt.subplots(figsize=(8, 7))
 im = ax.imshow(W_init, cmap='RdBu_r', aspect='equal', interpolation='none', vmin=-4.0, vmax=4.0)
 plt.colorbar(im, label='Synaptic Weight (mV)')
-ax.set_title('Small World Network Connectivity Matrix (Initial Weights)')
+ax.set_title('Network Connectivity Matrix (Initial Weights)')
 ax.set_xlabel('Post-synaptic Neuron Index')
 ax.set_ylabel('Pre-synaptic Neuron Index')
 
@@ -217,12 +217,12 @@ ax.text(ne / 2, ne + ni / 2, 'I -> E', color='black', fontsize=12, ha='center', 
 ax.text(ne + ni / 2, ne + ni / 2, 'I -> I', color='black', fontsize=12, ha='center', va='center')
 
 plt.tight_layout()
-init_conn_path = 'connectivity_matrix_initial_small_world.png'
+init_conn_path = 'connectivity_matrix_initial.png'
 plt.savefig(init_conn_path, dpi=150)
 print(f"Initial connectivity plot saved to {init_conn_path}")
 
 # Keep old name for backward compatibility
-plt.savefig('connectivity_matrix_small_world.png', dpi=150)
+plt.savefig('connectivity_matrix.png', dpi=150)
 
 # ---------------------------------------------------------
 # Running Simulation
@@ -247,11 +247,11 @@ plt.plot(spikemon.t[inh_spikes]/ms, spikemon.i[inh_spikes], '|', color='tab:red'
 
 plt.xlabel('Time (ms)')
 plt.ylabel('Neuron Index')
-plt.title(f'Small World Spike Raster Plot (Stimulus Orientation = {np.degrees(stim_theta):.1f}°)')
+plt.title(f'Spike Raster Plot (Stimulus Orientation = {np.degrees(stim_theta):.1f}°)')
 plt.legend()
 plt.tight_layout()
 
-raster_output_path = 'raster_plot_small_world.png'
+raster_output_path = 'raster_plot.png'
 plt.savefig(raster_output_path, dpi=150)
 print(f"Raster plot saved to {raster_output_path}")
 
@@ -267,7 +267,7 @@ W_final[S_II.i + ne, S_II.j + ne] = S_II.w / mV
 fig, ax = plt.subplots(figsize=(8, 7))
 im = ax.imshow(W_final, cmap='RdBu_r', aspect='equal', interpolation='none', vmin=-4.0, vmax=4.0)
 plt.colorbar(im, label='Synaptic Weight (mV)')
-ax.set_title('Small World Network Connectivity Matrix (Final Weights after 200 ms)')
+ax.set_title('Network Connectivity Matrix (Final Weights after 200 ms)')
 ax.set_xlabel('Post-synaptic Neuron Index')
 ax.set_ylabel('Pre-synaptic Neuron Index')
 
@@ -280,7 +280,7 @@ ax.text(ne / 2, ne + ni / 2, 'I -> E', color='black', fontsize=12, ha='center', 
 ax.text(ne + ni / 2, ne + ni / 2, 'I -> I', color='black', fontsize=12, ha='center', va='center')
 
 plt.tight_layout()
-final_conn_path = 'connectivity_matrix_final_small_world.png'
+final_conn_path = 'connectivity_matrix_final.png'
 plt.savefig(final_conn_path, dpi=150)
 print(f"Final connectivity plot saved to {final_conn_path}")
 
@@ -294,11 +294,11 @@ plt.hist(initial_EE_weights, bins=30, alpha=0.5, label='Initial', color='tab:gra
 plt.hist(final_EE_weights, bins=30, alpha=0.7, label='Final (After Plasticity)', color='tab:blue')
 plt.xlabel('Synaptic Weight (mV)')
 plt.ylabel('Count')
-plt.title('Small World E -> E Synaptic Weight Distribution (Initial vs Final)')
+plt.title('E -> E Synaptic Weight Distribution (Initial vs Final)')
 plt.legend()
 plt.tight_layout()
 
-dist_output_path = 'weight_distribution_small_world.png'
+dist_output_path = 'weight_distribution.png'
 plt.savefig(dist_output_path, dpi=150)
 print(f"Weight distribution plot saved to {dist_output_path}")
 
