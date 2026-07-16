@@ -1,5 +1,5 @@
 from brian2 import *
-from params import *
+from archive.params import *
 
 eqs = '''
 du/dt = -u/tau : volt

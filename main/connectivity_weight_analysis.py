@@ -24,7 +24,8 @@ def get_po_diff_deg(theta1, theta2):
 
 def plot_binned_trend(ax, x, y, bins=15, color='darkblue'):
     """
-    Computes and plots a running mean trend of the y values binned along x.
+    Computes and plots a running mean trend of the y values binned along x,
+    along with a shaded area representing the first standard deviation about the mean.
     Uses pure numpy to avoid any external scipy dependencies.
     """
     if len(x) == 0:
@@ -32,6 +33,7 @@ def plot_binned_trend(ax, x, y, bins=15, color='darkblue'):
     bin_edges = np.linspace(0, 90, bins + 1)
     bin_centers = 0.5 * (bin_edges[:-1] + bin_edges[1:])
     bin_means = []
+    bin_stds = []
     
     for i in range(bins):
         mask = (x >= bin_edges[i]) & (x < bin_edges[i+1])
@@ -40,10 +42,16 @@ def plot_binned_trend(ax, x, y, bins=15, color='darkblue'):
         
         if np.any(mask):
             bin_means.append(np.mean(y[mask]))
+            bin_stds.append(np.std(y[mask]))
         else:
             bin_means.append(np.nan)
+            bin_stds.append(np.nan)
+            
+    bin_means = np.array(bin_means)
+    bin_stds = np.array(bin_stds)
             
     ax.plot(bin_centers, bin_means, color=color, linewidth=3.0, label='Mean Trend')
+    ax.fill_between(bin_centers, bin_means - bin_stds, bin_means + bin_stds, color=color, alpha=0.15, label='±1 SD')
     ax.legend(loc='upper right')
 
 if __name__ == '__main__':
@@ -88,7 +96,7 @@ if __name__ == '__main__':
     fig, axes = plt.subplots(1, 2, figsize=(14, 6), sharey=True)
     
     # Before Training
-    axes[0].scatter(po_diff_all, w_all_before, s=1, alpha=0.1, color='tab:gray', rasterized=True)
+    # axes[0].scatter(po_diff_all, w_all_before, s=1, alpha=0.1, color='tab:gray', rasterized=True)
     plot_binned_trend(axes[0], po_diff_all, w_all_before, bins=15, color='tab:blue')
     axes[0].set_title('All Synaptic Weights BEFORE Training')
     axes[0].set_xlabel('Orientation Difference Δθ* (deg)')
@@ -97,7 +105,7 @@ if __name__ == '__main__':
     axes[0].set_xlim(0, 90)
     
     # After Training
-    axes[1].scatter(po_diff_all, w_all_after, s=1, alpha=0.1, color='tab:gray', rasterized=True)
+    # axes[1].scatter(po_diff_all, w_all_after, s=1, alpha=0.1, color='tab:gray', rasterized=True)
     plot_binned_trend(axes[1], po_diff_all, w_all_after, bins=15, color='tab:red')
     axes[1].set_title('All Synaptic Weights AFTER Training')
     axes[1].set_xlabel('Orientation Difference Δθ* (deg)')
@@ -115,15 +123,15 @@ if __name__ == '__main__':
     
     # Setup for each row: (Row Name, diff data, weights before, weights after, ylimits, scatter color, trend color)
     subgroups = [
-        ('E -> E', po_diff_ee, w_ee_before, w_ee_after, (0.0, 2.05), 'tab:blue', 'navy'),
-        ('E -> I', po_diff_ei, w_ei_before, w_ei_after, (0.0, 2.05), 'tab:green', 'darkgreen'),
-        ('I -> E', po_diff_ie, w_ie_before, w_ie_after, (-5.05, 0.05), 'tab:red', 'darkred'),
-        ('I -> I (Static)', po_diff_ii, w_ii_before, w_ii_after, (-5.05, 0.05), 'tab:purple', 'indigo')
+        ('E -> E', po_diff_ee, w_ee_before, w_ee_after, (0.0, 2.55), 'tab:blue', 'navy'),
+        ('E -> I', po_diff_ei, w_ei_before, w_ei_after, (0.0, 2.55), 'tab:green', 'darkgreen'),
+        ('I -> E', po_diff_ie, w_ie_before, w_ie_after, (-5.55, 0.05), 'tab:red', 'darkred'),
+        ('I -> I (Static)', po_diff_ii, w_ii_before, w_ii_after, (-5.55, 0.05), 'tab:purple', 'indigo')
     ]
     
     for row, (name, diff, w_before, w_after, ylim, color_scatter, color_trend) in enumerate(subgroups):
         # Column 0: Before Training
-        axes[row, 0].scatter(diff, w_before, s=3, alpha=0.15, color=color_scatter, rasterized=True)
+        # axes[row, 0].scatter(diff, w_before, s=3, alpha=0.15, color=color_scatter, rasterized=True)
         plot_binned_trend(axes[row, 0], diff, w_before, bins=15, color=color_trend)
         axes[row, 0].set_title(f'{name} Weights BEFORE Training')
         axes[row, 0].set_ylabel('Synaptic Weight (mV)')
@@ -132,7 +140,7 @@ if __name__ == '__main__':
         axes[row, 0].set_ylim(ylim)
         
         # Column 1: After Training
-        axes[row, 1].scatter(diff, w_after, s=3, alpha=0.15, color=color_scatter, rasterized=True)
+        # axes[row, 1].scatter(diff, w_after, s=3, alpha=0.15, color=color_scatter, rasterized=True)
         plot_binned_trend(axes[row, 1], diff, w_after, bins=15, color=color_trend)
         axes[row, 1].set_title(f'{name} Weights AFTER Training')
         axes[row, 1].grid(True, linestyle=':', alpha=0.6)
